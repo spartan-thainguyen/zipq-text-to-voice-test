@@ -1,11 +1,19 @@
 .DEFAULT_GOAL := all
-.PHONY: all help check install run tts clean
+.PHONY: all help check install run local dev prod tts clean
 
 TTS_PORT := 8765
+LOCAL_URL := http://localhost:5174
+DEV_URL := https://app.dev.zipq.io/
+PROD_URL := https://app.zipq.io/
+TARGET_URL ?= $(LOCAL_URL)
+export TARGET_URL
 
 help:
 	@echo "Voice Test - usage:"
-	@echo "  make          Install everything and start (same as 'make all')"
+	@echo "  make          Install everything and start on local (same as 'make all')"
+	@echo "  make local    Start against $(LOCAL_URL)"
+	@echo "  make dev      Start against $(DEV_URL)"
+	@echo "  make prod     Start against $(PROD_URL)"
 	@echo "  make install  Install dependencies only"
 	@echo "  make run      Start the voice tool (assumes installed)"
 	@echo "  make clean    Remove installed files and stop any leftover server"
@@ -33,6 +41,15 @@ run: check
 	sleep 1; \
 	echo "==> Speech server running. Starting the browser..."; \
 	npm start
+
+local: TARGET_URL := $(LOCAL_URL)
+local: install run
+
+dev: TARGET_URL := $(DEV_URL)
+dev: install run
+
+prod: TARGET_URL := $(PROD_URL)
+prod: install run
 
 tts: check
 	python3 tts-server.py
