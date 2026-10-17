@@ -1,0 +1,15 @@
+name: rpa-hard
+source: https://app.notion.com/p/c0x12c/Hard-scripts-for-Sofia-RPA-form-3fa01fb05bf180fc820ffba1b620d679
+repeat: 3
+
+document:
+  match: "RPA|Residential Purchase"
+
+bootstrap:
+  say: "Create a new transaction. The buyer is Emily Carter. Start with RPA."
+
+defaults:
+  expect:
+    reply:
+      - english: true
+        severity: medium

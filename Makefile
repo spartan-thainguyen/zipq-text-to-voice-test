@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY: all help check install run local dev prod tts clean
+.PHONY: all help check install run local dev prod tts clean login suite report
 
 TTS_PORT := 8765
 LOCAL_URL := http://localhost:5174
@@ -16,6 +16,9 @@ help:
 	@echo "  make prod     Start against $(PROD_URL)"
 	@echo "  make install  Install dependencies only"
 	@echo "  make run      Start the voice tool (assumes installed)"
+	@echo "  make login ENV=dev            Sign in once; the browser profile is kept per environment"
+	@echo "  make suite ENV=dev [ONLY=H1,H2] [REPEAT=3] [HEADLESS=1]   Run the automated suite"
+	@echo "  make report [RUN=latest]      Rebuild the report of a past run"
 	@echo "  make clean    Remove installed files and stop any leftover server"
 
 all: install run
@@ -50,6 +53,20 @@ dev: install run
 
 prod: TARGET_URL := $(PROD_URL)
 prod: install run
+
+ENV ?= dev
+SUITE ?= rpa-hard
+SUITE_ARGS = --env $(ENV) --suite $(SUITE) $(if $(ONLY),--only $(ONLY)) $(if $(REPEAT),--repeat $(REPEAT)) $(if $(HEADLESS),--headless) $(if $(KEEP_RAW),--keep-raw) $(if $(ALLOW_PROD),--allow-prod)
+
+login: check
+	@node src/cli.mjs login --env $(ENV)
+
+suite: check
+	@[ -d node_modules ] || { echo "Not installed yet - run 'make install' first."; exit 1; }
+	@node src/cli.mjs run $(SUITE_ARGS)
+
+report:
+	@node src/cli.mjs report $(or $(RUN),latest)
 
 tts: check
 	python3 tts-server.py

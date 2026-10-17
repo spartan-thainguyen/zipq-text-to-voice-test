@@ -1,0 +1,36 @@
+id: H1
+title: Everything at once, out of order
+steps:
+  - id: H1.1
+    say: "Escrow holder is Harbor Title, each side pays their own escrow fee, the property is 1287 Willow Creek Lane in Irvine, Orange County, 92618, the price is 875,000, the seller pays the termite report, close of escrow is 45 days, the appraisal contingency is 14 days, and the seller's agent license is zero one two three four five six seven."
+    expect:
+      form:
+        - { field: costs.escrow.holder, contains: Harbor Title }
+        - { field: costs.escrow.fee_each_own, checked: true }
+        - { field: offer.property.address, contains: "1287 Willow Creek" }
+        - { field: offer.property.city, contains: Irvine }
+        - { field: offer.property.county, contains: Orange }
+        - { field: offer.property.zip, equals: "92618" }
+        - { field: offer.purchase_price, equals: "875000" }
+        - { field: offer.coe.days_after_acceptance, equals: "45" }
+        - { field: offer.coe.days_check, checked: true }
+        - { field: contingencies.appraisal.days, equals: "14" }
+        - { field: offer.brokerage.sellers.agent.lic, equals: "01234567", severity: critical }
+      reply:
+        - judge: "Sofia states what she wrote and covers all nine values: escrow holder, escrow fee split, property address, price, termite payer, close of escrow days, appraisal days, seller's agent license. None dropped."
+  - id: H1.2
+    say: "Read back everything you just filled."
+    expect:
+      form:
+        - noChanges: true
+      reply:
+        - matches: "Harbor Title"
+        - matches: "875,?000"
+        - judge: "The read-back lists exactly what was filled in the previous turn, with nothing extra invented."
+  - id: H1.3
+    say: "Which of those did you not fill?"
+    expect:
+      form:
+        - noChanges: true
+      reply:
+        - judge: "Sofia says none was missed, or names a genuinely missing item. She must not invent a gap among the nine values just given."

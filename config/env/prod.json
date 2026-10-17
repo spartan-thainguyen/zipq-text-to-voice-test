@@ -1,0 +1,7 @@
+{
+  "name": "prod",
+  "webUrl": "https://app.zipq.io/",
+  "apiUrl": "https://api.zipq.io/",
+  "readOnly": true,
+  "langfuse": { "enabled": false, "environment": "prod" }
+}

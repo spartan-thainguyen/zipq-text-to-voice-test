@@ -1,0 +1,42 @@
+id: H2
+title: Corrections and changes of mind
+steps:
+  - id: H2.1
+    say: "The price is 850,000, no wait, 875,000."
+    expect:
+      form:
+        - { field: offer.purchase_price, equals: "875000", severity: critical }
+  - id: H2.2
+    say: "Deposit is three percent. Actually make it two and a half percent."
+    expect:
+      form:
+        - { field: offer.initial_deposit.percent, matches: '^2\.5\s*%?$' }
+        - { field: offer.initial_deposit.amount, oneOf: ["21875", ""] }
+  - id: H2.3
+    say: "Close of escrow is 30 days. Hmm, make that the first of December."
+    expect:
+      form:
+        - { field: offer.coe.on_date_check, checked: true }
+        - { field: offer.coe.days_check, checked: false }
+        - { field: offer.coe.days_after_acceptance, empty: true }
+        - { field: offer.coe.date, matches: '12/0?1|December 1|Dec\.? 1|-12-01' }
+  - id: H2.4
+    say: "Actually go back to 30 days."
+    expect:
+      form:
+        - { field: offer.coe.days_check, checked: true }
+        - { field: offer.coe.days_after_acceptance, equals: "30" }
+        - { field: offer.coe.on_date_check, checked: false }
+        - { field: offer.coe.date, empty: true }
+  - id: H2.5
+    say: "Forget the deposit for now, I'll give it later."
+    expect:
+      form:
+        - { noChanges: true, severity: critical }
+  - id: H2.6
+    say: "Where were we?"
+    expect:
+      form:
+        - noChanges: true
+      reply:
+        - judge: "Sofia says what is filled so far (price 875,000, close of escrow 30 days) and what comes next, without claiming a deposit amount was set."

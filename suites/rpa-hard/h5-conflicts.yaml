@@ -1,0 +1,56 @@
+id: H5
+title: Impossible, conflicting or inconsistent values
+steps:
+  - id: H5.0
+    say: "The price is 875,000."
+    expect:
+      form:
+        - { field: offer.purchase_price, equals: "875000" }
+  - id: H5.1
+    say: "The deposit is 100,000 and the price is 80,000."
+    expect:
+      form:
+        - { field: offer.purchase_price, equals: "875000", severity: critical }
+        - { field: offer.initial_deposit.amount, empty: true, severity: critical }
+      reply:
+        - judge: "Sofia points out that the deposit is higher than the price and asks which is right, instead of silently picking one."
+  - id: H5.2
+    say: "Deposit is three percent, that's forty thousand dollars, on an 875,000 price."
+    expect:
+      reply:
+        - judge: "Sofia points out that three percent of 875,000 is 26,250, not 40,000, and asks which to keep. She does not correct it silently."
+  - id: H5.3
+    say: "Close of escrow is 30 days after acceptance and also on December third."
+    expect:
+      form:
+        - { atMostOneChecked: [offer.coe.days_check, offer.coe.on_date_check], severity: critical }
+      reply:
+        - judge: "Sofia asks which close of escrow option is meant."
+  - id: H5.4
+    say: "Date prepared is the thirty-second of October."
+    expect:
+      form:
+        - { field: offer.meta.date_prepared, empty: true, severity: critical }
+      reply:
+        - judge: "Sofia says it is not a valid date and asks again."
+  - id: H5.5
+    say: "It's all cash, and the loan is 700,000 FHA."
+    expect:
+      form:
+        - { atMostOneChecked: [offer.all_cash, offer.loan.1.fha], severity: critical }
+      reply:
+        - judge: "Sofia points out that All Cash conflicts with a loan and asks which is right."
+  - id: H5.6
+    say: "No loan contingency, and the loan contingency is 17 days."
+    expect:
+      reply:
+        - judge: "Sofia notices the two statements contradict each other and asks which one is meant."
+  - id: H5.7
+    say: "Okay: loan 700,000 FHA, not all cash, deposit 26,250."
+    expect:
+      form:
+        - { field: offer.loan.1.amount, equals: "700000" }
+        - { field: offer.loan.1.fha, checked: true }
+        - { field: offer.all_cash, checked: false }
+        - { field: offer.initial_deposit.amount, equals: "26250" }
+        - { field: offer.purchase_price, equals: "875000", severity: critical }

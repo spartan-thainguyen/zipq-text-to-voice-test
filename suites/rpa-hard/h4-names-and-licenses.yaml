@@ -1,0 +1,49 @@
+id: H4
+title: Names, license numbers and spelling
+steps:
+  - id: H4.1
+    say: "The seller's agent is James Wilson, W I L S O N, license zero one nine five five seven three eight."
+    expect:
+      form:
+        - { field: offer.brokerage.sellers.agent.name, contains: James Wilson }
+        - { field: offer.brokerage.sellers.agent.lic, equals: "01955738", severity: critical }
+  - id: H4.2
+    say: "License number is twelve thirty-four fifty-six seventy-eight."
+    expect:
+      form:
+        - { noChanges: true, severity: critical }
+      reply:
+        - judge: "Sofia asks whose license it is (brokerage or agent, buyer or seller) instead of writing 12345678 on her own."
+  - id: H4.3
+    say: "The other one is nine eight seven six five four three two."
+    expect:
+      form:
+        - { unchanged: [offer.brokerage.sellers.agent.lic], severity: critical }
+      reply:
+        - judge: "Sofia either confirms which field the number belongs to, or fills the correct other license field and says so. She never overwrites the seller's agent license 01955738."
+  - id: H4.4
+    say: "The seller's brokerage is Beverly and Company, B E V E R L Y."
+    expect:
+      form:
+        - { field: offer.brokerage.sellers.firm.name, contains: Beverly }
+        - { field: offer.brokerage.sellers.agent.name, contains: James Wilson }
+  - id: H4.5
+    say: "The buyer is Emily Carter, C as in Charlie, A R T E R."
+    expect:
+      form:
+        - { field: [signatures.buyer.1.printed_name, buyer_1_full_name], contains: Emily Carter }
+  - id: H4.6
+    say: "The street is Calle de la Rosa, number four twelve, in Santa Ana."
+    expect:
+      form:
+        - { field: offer.property.address, matches: '412.*Calle de la Rosa|Calle de la Rosa.*412' }
+        - { field: offer.property.city, contains: Santa Ana }
+      reply:
+        - english: true
+          severity: high
+  - id: H4.7
+    say: "Change the agent's last name to Clarke with an E at the end."
+    expect:
+      form:
+        - { field: offer.brokerage.sellers.agent.name, equals: James Clarke }
+        - { field: offer.brokerage.sellers.agent.lic, equals: "01955738", severity: critical }

@@ -1,0 +1,21 @@
+{
+  "repeat": 3,
+  "headless": false,
+  "tts": { "provider": "say", "voice": null },
+  "timing": {
+    "firstAudioTimeoutMs": 30000,
+    "settleSilenceMs": 1500,
+    "turnTimeoutMs": 90000,
+    "noAudioFallbackMs": 10000,
+    "replyGraceMs": 10000,
+    "pollIntervalMs": 500
+  },
+  "thresholds": {
+    "speechEndToFirstAudioMs": 6000,
+    "turnTotalMs": 20000,
+    "toolMs": 4000
+  },
+  "judge": { "enabled": true, "model": "claude-haiku-5-5" },
+  "ignoreRequestErrors": [],
+  "ui": { "homeUrl": null, "startVoice": [] }
+}

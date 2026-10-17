@@ -1,0 +1,6 @@
+{
+  "name": "dev",
+  "webUrl": "https://app.dev.zipq.io/",
+  "apiUrl": "https://api.dev.zipq.io/",
+  "langfuse": { "enabled": false, "environment": "dev" }
+}

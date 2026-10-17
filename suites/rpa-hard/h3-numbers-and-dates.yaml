@@ -1,0 +1,43 @@
+id: H3
+title: Numbers and dates said in tricky ways
+steps:
+  - id: H3.1
+    say: "The price is eight seventy-five K."
+    expect:
+      form:
+        - { field: offer.purchase_price, equals: "875000" }
+  - id: H3.2
+    say: "Loan amount is seven hundred thousand, that's eighty percent."
+    expect:
+      form:
+        - { field: offer.loan.1.amount, equals: "700000" }
+        - { field: offer.loan.1.percent, matches: '^80(\.0+)?\s*%?$' }
+  - id: H3.3
+    say: "Seller credit is five thousand two hundred fifty dollars."
+    expect:
+      form:
+        - { field: contingencies.seller_credit.amount, equals: "5250" }
+  - id: H3.4
+    say: "Date prepared is the fifteenth of October."
+    expect:
+      reply:
+        - judge: "Either the Date Prepared field changed to October 15 of {{year}}, or Sofia asked which year. A wrong year is a failure."
+  - id: H3.5
+    say: "Close of escrow is a month from today."
+    expect:
+      reply:
+        - judge: "Sofia either counted a month from today's date and said the date she chose ({{today_iso}} is today), or asked whether it is days or a date. She must not silently pick an unrelated value."
+  - id: H3.6
+    say: "Investigation is ten days, not seventeen."
+    expect:
+      form:
+        - { field: contingencies.investigation.days, equals: "10" }
+  - id: H3.7
+    say: "Home warranty up to eight hundred."
+    expect:
+      form:
+        - { field: costs.home_warranty.buyer, checked: false, severity: critical }
+        - { field: costs.home_warranty.seller, checked: false, severity: critical }
+        - { field: costs.home_warranty.both, checked: false, severity: critical }
+      reply:
+        - judge: "Sofia asks who pays for the home warranty and does not tick a payer herself."

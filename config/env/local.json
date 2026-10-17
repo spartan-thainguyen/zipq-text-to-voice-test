@@ -1,0 +1,6 @@
+{
+  "name": "local",
+  "webUrl": "http://localhost:5174/",
+  "apiUrl": "http://localhost:8082/",
+  "langfuse": { "enabled": false }
+}
